@@ -1,27 +1,28 @@
 language: java
 
+before_install:
+- chmod +x .buildscript/deploy_snapshot.sh
+
+after_success:
+- ".buildscript/deploy_snapshot.sh"
+
 notifications:
   email: false
 
 jdk:
   - oraclejdk8
-
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
+  - oraclejdk7
 
 env:
   global:
-    - MAVEN_OPTS="-Xmx256M"
+  - MAVEN_OPTS="-Xmx256M"
+  - secure: "ODMPXTA/fekGf0X4+TCW3W2DFzq3TOp1709i/mXOyPWE0setTErCqTuGIrueGzBJ5pCJpMKjRELxDYyXTonZzNf95y2rXmBI8c5FXMPrqOCG9wxuLc1KaHT0GvpBXyyg0cXReUtKYkTsCXkY2eeFmUk/rFiGFVUAXccvfRK//W0="
+  - secure: "MQUGFaV1qvY8cOj7tKPYSBHzz02SmSoFFY/9ZC1BXm9nlsTwMKuV7o3DOtfo7DgcEe/f/lb+IXNnbnVBVmQ3y0HlVzzIXCcjKcN5lFesMpHqXhVItOyhr0x/DGfLc4ybWYx3tg4Zcr0B6Tww9bREaXTYTrLxOsEvmMYMdKu4chQ="
 
 sudo: false
 
 cache:
   directories:
-    - $HOME/.m2/io
-    - $HOME/.m2/org
-
-script: mvn clean install -DperformRelease=false -Dmaven.javadoc.skip=true -B -V -q -T 2
-
+  - "$HOME/.m2/io"
+  - "$HOME/.m2/org"
 

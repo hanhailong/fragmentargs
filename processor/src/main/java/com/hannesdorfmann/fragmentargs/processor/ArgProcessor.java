@@ -99,6 +99,7 @@ public class ArgProcessor extends AbstractProcessor {
   public Set<String> getSupportedAnnotationTypes() {
     Set<String> supportTypes = new LinkedHashSet<String>();
     supportTypes.add(Arg.class.getCanonicalName());
+    supportTypes.add(FragmentWithArgs.class.getCanonicalName());
     supportTypes.add(FragmentArgsInherited.class.getCanonicalName());
     return supportTypes;
   }
@@ -190,6 +191,12 @@ public class ArgProcessor extends AbstractProcessor {
                                    ArgumentAnnotatedField arg) throws IOException, ProcessingException {
 
     jw.emitEmptyLine();
+
+    if (!arg.isPrimitive()) {
+      jw.beginControlFlow("if (%s == null)", arg.getName());
+      jw.emitStatement("throw new NullPointerException(\"Argument '%s' must not be null.\")", arg.getName());
+      jw.endControlFlow();
+    }
 
     if (arg.hasCustomBundler()) {
       jw.emitStatement("%s.putBoolean(\"%s\", true)", bundleVariable,
